@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Property;
 use App\Repository\PropertyRepository;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,13 +24,19 @@ class PropertyController extends AbstractController
      * @var PropertyRepository
      */
     private $repository;
+
+    /**
+     * @var ObjectManager
+     */
+    private $em;
     
     /**
      * Constructeur
      */
-    public function __construct(PropertyRepository $repository)
+    public function __construct(PropertyRepository $repository, EntityManagerInterface  $em)
     {
         $this->repository = $repository;
+        $this->em = $em;
     }
 
     /**
@@ -38,7 +46,16 @@ class PropertyController extends AbstractController
      */
     public function index(): Response
     {
-       $property = $this->repository->find(1);
+        // Récupérer un seul bien
+       //$property = $this->repository->find(1);
+       // Recupérer tous les biens
+       //$property = $this->repository->findAll();
+       // Récupérer avec conditions
+      // $property = $this->repository->findOneBy(['floor' => 4]);
+       // Récupérer avec des conditions spécifiques
+       $property = $this->repository->findAllVisible();
+      /* $property[0]->setSold(false);
+       $this->em->flush();
        dump($property);
         /*$property = new Property();
         $property->setTitle('Mon premier bien')
